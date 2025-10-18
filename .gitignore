@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+*.egg
+*.egg-info/
+.cache
+.pytest_cache/
+.mypy_cache/
+.vscode/
+
+# Logs e Dados
+logs/
+reports/
+data/*.csv
+data/*.json
+*.db # Para SQLite
+
+# Variáveis de Ambiente (MUITO IMPORTANTE!)
+.env
+
+# Sistema Operacional
+.DS_Store
+Thumbs.db
+
+# IDEs
+.idea/
+*.iml
+
+# Arquivos de backup do nano
+*.save
