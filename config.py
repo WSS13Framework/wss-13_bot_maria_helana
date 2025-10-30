@@ -9,9 +9,21 @@ CONFIG = {
     'bot_version': '0.2.0',
     
     # === EXCHANGE ===
-    'exchange': 'binance',
+    'exchange': 'binance', # Mantém 'binance' para o CCXT identificar a classe
     'symbol': 'BTC/USDT',
     'timeframe': '1h',
+    
+    # === CONFIGURAÇÕES PARA BINANCE REAL (MODIFICADO!) ===
+    # Ative 'testnet': True para usar o ambiente de testnet
+    'testnet': False, 
+    # Remova as linhas 'urls' e 'options' específicas da Testnet
+    # 'urls': {
+    #     'api': 'https://testnet.binance.vision/api'
+    # },
+    'options': {
+        'defaultType': 'spot' # Tipo de mercado (spot, future, etc.)
+    },
+    # ==================================================
     
     # === CAPITAL (3% por trade como você pediu!) ===
     'initial_capital': 1000,
@@ -53,6 +65,26 @@ def get_position_size_in_currency(capital=None):
     return capital * CONFIG['max_position_size']
 
 def get_max_loss_per_trade(capital=None):
+    """
+    Retorna a perda máxima por trade em unidades da moeda base.
+
+    Args:
+        capital (float | int | None): Capital total usado para calcular o tamanho da posição.
+            Se None, usa CONFIG['initial_capital'].
+
+    Returns:
+        float: Perda máxima aceitável por trade (valor em moeda), calculada como
+            get_position_size_in_currency(capital) * CONFIG['stop_loss_pct'].
+
+    Raises:
+        KeyError: Se CONFIG não contiver as chaves necessárias ('initial_capital' ou 'stop_loss_pct').
+        TypeError: Se o valor de capital não for numérico.
+        Propaga exceções levantadas por get_position_size_in_currency.
+
+    Examples:
+        >>> get_max_loss_per_trade(10000)
+        50.0  # Exemplo ilustrativo, depende de get_position_size_in_currency e CONFIG
+    """
     """Retorna perda máxima por trade"""
     if capital is None:
         capital = CONFIG['initial_capital']
