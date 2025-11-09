@@ -1,206 +1,25 @@
-"""
-🎯 Estratégia #1: RSI + Volume
-Maria Helena - Estratégia Base
-
-"Compre barato quando ninguém quer, venda caro quando todos querem"
-"""
-
-from rich.console import Console
-
-console = Console()
 class RSIVolumeStrategy:
-    """
-    Estratégia simples mas efetiva:
-    
-    COMPRA quando:
-    - RSI < 30 (oversold - ativo "barato")
-    - Volume > 70% (confirmação de interesse)
-    - Tendência não está fortemente baixista
-    
-    VENDE quando:
-    - RSI > 70 (overbought - ativo "caro")
-    - OU lucro de 2% alcançado
-    - OU stop loss de 2% atingido
-    """
-    
     def __init__(self, config):
-        self.name = "rsi_volume_v1"
-        self.version = "1.0.0"
+        self.rsi_period = config.get('rsi_period', 14)
+        self.rsi_oversold = config.get('rsi_oversold', 30)
+        self.rsi_overbought = config.get('rsi_overbought', 70)
+        self.volume_threshold = config.get('volume_threshold', 0.6)
         
-        # Parâmetros da estratégia
-        self.rsi_oversold = config.get('rsi_oversold', 30) / 100.0  # Converte para 0-1
-        self.rsi_overbought = config.get('rsi_overbought', 70) / 100.0
-        self.volume_threshold = config.get('volume_threshold', 0.70)
-        
-        # Tracking
-        self.signals_generated = 0
-        self.last_signal = None
-        
-        console.print(f"[green]🎯 Estratégia '{self.name}' carregada[/green]")
-    
-    def evaluate(self, normalized_data):
+    def analyze(self, df):
         """
-        Avalia se deve gerar sinal de compra ou venda
+        Analisa DataFrame com dados OHLCV e retorna sinal de trading
         
         Args:
-            normalized_data: Dict com dados normalizados (0-1)
-        
+            df: DataFrame com colunas ['timestamp', 'open', 'high', 'low', 'close', 'volume']
+            
         Returns:
-            dict ou None: Sinal de trade ou None se não há setup
+            dict: Sinal de trading com 'action', 'confidence' e outros indicadores
         """
-        
-        rsi = normalized_data['rsi_norm']
-        volume = normalized_data['volume_norm']
-        price = normalized_data['price']
-        trend = normalized_data.get('trend', 'neutral')
-        
-        # === LÓGICA DE COMPRA ===
-        if self._check_buy_conditions(rsi, volume, trend):
-            signal = {
-                'action': 'BUY',
-                'price': price,
-                'confidence': self._calculate_buy_confidence(rsi, volume),
-                'reason': f"RSI oversold ({rsi:.2f}) + Volume alto ({volume:.2f})",
-                'strategy': self.name,
-                'indicators': {
-                    'rsi_norm': rsi,
-                    'volume_norm': volume,
-                    'trend': trend
-                },
-                'timestamp': normalized_data.get('timestamp')
-            }
-            
-            self.signals_generated += 1
-            self.last_signal = signal
-            
-            console.print(f"[green]🟢 SINAL DE COMPRA #{self.signals_generated}[/green]")
-            console.print(f"   Preço: ${price:,.2f}")
-            console.print(f"   RSI: {rsi:.2f} | Volume: {volume:.2f}")
-            console.print(f"   Confiança: {signal['confidence']:.2%}")
-            
-            return signal
-        
-        # === LÓGICA DE VENDA ===
-        elif self._check_sell_conditions(rsi):
-            signal = {
-                'action': 'SELL',
-                'price': price,
-                'confidence': self._calculate_sell_confidence(rsi),
-                'reason': f"RSI overbought ({rsi:.2f})",
-                'strategy': self.name,
-                'indicators': {
-                    'rsi_norm': rsi,
-                    'volume_norm': volume,
-                    'trend': trend
-                },
-                'timestamp': normalized_data.get('timestamp')
-            }
-            
-            self.signals_generated += 1
-            self.last_signal = signal
-            
-            console.print(f"[yellow]🔴 SINAL DE VENDA #{self.signals_generated}[/yellow]")
-            console.print(f"   Preço: ${price:,.2f}")
-            console.print(f"   RSI: {rsi:.2f}")
-            
-            return signal
-        
-        # Nenhum setup identificado
-        return None
-    
-    def _check_buy_conditions(self, rsi, volume, trend):
-        """
-        Valida condições de compra
-        
-        Todas devem ser verdadeiras:
-        1. RSI em oversold
-        2. Volume confirmando
-        3. Não estar em downtrend forte
-        """
-        condition_1 = rsi < self.rsi_oversold
-        condition_2 = volume > self.volume_threshold
-        condition_3 = trend != 'down'  # Evita pegar "faca caindo"
-        
-        return condition_1 and condition_2 and condition_3
-    
-    def _check_sell_conditions(self, rsi):
-        """
-        Valida condições de venda
-        
-        Simples: RSI em overbought
-        """
-        return rsi > self.rsi_overbought
-    
-    def _calculate_buy_confidence(self, rsi, volume):
-        """
-        Calcula confiança do sinal de compra
-        
-        Quanto mais oversold e mais volume, mais confiança
-        """
-        # Base: 60%
-        confidence = 0.60
-        
-        # Bônus por RSI muito baixo
-        if rsi < 0.25:  # Muito oversold
-            confidence += 0.10
-        
-        # Bônus por volume muito alto
-        if volume > 0.80:
-            confidence += 0.10
-        
-        # Máximo 85%
-        return min(confidence, 0.85)
-    
-    def _calculate_sell_confidence(self, rsi):
-        """
-        Calcula confiança do sinal de venda
-        """
-        confidence = 0.65
-        
-        if rsi > 0.75:  # Muito overbought
-            confidence += 0.10
-        
-        return min(confidence, 0.80)
-    
-    def get_stats(self):
-        """Retorna estatísticas da estratégia"""
-        return {
-            'name': self.name,
-            'version': self.version,
-            'signals_generated': self.signals_generated,
-            'last_signal': self.last_signal
+        # Implementação básica inicial
+        signal = {
+            'action': 'HOLD',
+            'confidence': 0.0,
+            'rsi': 50.0,
+            'volume': df['volume'].iloc[-1]
         }
-
-# Teste
-if __name__ == "__main__":
-    from config import CONFIG
-    
-    console.print("\n[bold cyan]�� Testando Estratégia...[/bold cyan]\n")
-    
-    strategy = RSIVolumeStrategy(CONFIG)
-    
-    # Cenário 1: Oversold com volume
-    test_data_buy = {
-        'rsi_norm': 0.28,  # RSI 28
-        'volume_norm': 0.75,  # Volume alto
-        'price': 67500,
-        'trend': 'neutral'
-    }
-    
-    signal = strategy.evaluate(test_data_buy)
-    
-    if signal:
-        console.print("\n[green]✅ Estratégia gerou sinal de COMPRA![/green]")
-    
-    # Cenário 2: Overbought
-    test_data_sell = {
-        'rsi_norm': 0.72,  # RSI 72
-        'volume_norm': 0.60,
-        'price': 68500,
-        'trend': 'neutral'
-    }
-    
-    signal = strategy.evaluate(test_data_sell)
-    
-    if signal:
-        console.print("\n[yellow]✅ Estratégia gerou sinal de VENDA![/yellow]")
+        return signal

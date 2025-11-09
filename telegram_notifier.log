@@ -1,0 +1,12 @@
+2025-11-01 19:11:00,358 - __main__ - INFO - ⏳ Iniciando testes do notificador Telegram...
+2025-11-01 19:11:00,360 - __main__ - INFO - 
+🔵 Teste 1: Mensagem simples
+2025-11-01 19:11:01,340 - __main__ - INFO - 🟢 Sucesso: Mensagem enviada
+2025-11-01 19:11:01,341 - __main__ - INFO - 
+🔵 Teste 2: Mensagem Markdown
+2025-11-01 19:11:02,720 - __main__ - INFO - 🟢 Sucesso: Markdown enviado
+2025-11-01 19:11:02,724 - __main__ - INFO - 
+🔵 Teste 3: Alerta de trade
+2025-11-01 19:11:04,136 - __main__ - INFO - 🟢 Sucesso: Alerta de trade enviado
+2025-11-01 19:11:04,136 - __main__ - INFO - 
+🎉 Todos os testes concluídos com sucesso!

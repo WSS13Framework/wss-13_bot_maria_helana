@@ -1,0 +1,5 @@
+2025-11-01 20:01:54,248 - root - ERROR - Erro ao enviar para 1617889564: 401 Client Error: Unauthorized for url: https://api.telegram.org/bot8197343489:AAHAB7e8eCJtrwwh3I7VjhSVUlZ6Lp-2DyA/sendMessage
+2025-11-01 20:01:54,451 - root - ERROR - Erro ao enviar para 7436181680: 401 Client Error: Unauthorized for url: https://api.telegram.org/bot8197343489:AAHAB7e8eCJtrwwh3I7VjhSVUlZ6Lp-2DyA/sendMessage
+2025-11-01 20:01:54,665 - root - ERROR - Erro ao enviar para 1617889564: 401 Client Error: Unauthorized for url: https://api.telegram.org/bot8197343489:AAHAB7e8eCJtrwwh3I7VjhSVUlZ6Lp-2DyA/sendMessage
+2025-11-01 20:01:54,865 - root - ERROR - Erro ao enviar para 7436181680: 401 Client Error: Unauthorized for url: https://api.telegram.org/bot8197343489:AAHAB7e8eCJtrwwh3I7VjhSVUlZ6Lp-2DyA/sendMessage
+2025-11-01 20:01:54,869 - __main__ - INFO - ✅ Testes concluídos

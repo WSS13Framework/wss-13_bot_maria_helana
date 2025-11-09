@@ -19,9 +19,9 @@ load_dotenv() # Carrega as variáveis do arquivo .env
 # ------------------------------------------------------
 
 from config import CONFIG
-from protection.risk_manager import RiskManager # type: ignore
-from protection.technical_guard import TechnicalGuard # type: ignore
-from protection.circuit_breaker import CircuitBreaker # type: ignore
+from protection.risk_manager import RiskManager 
+from protection.technical_guard import TechnicalGuard 
+from protection.circuit_breaker import CircuitBreaker 
 from strategies.mentor_signal_processor import MentorSignalProcessor
 from data.normalizer import Normalizer
 
